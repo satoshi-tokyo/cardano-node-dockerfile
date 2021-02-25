@@ -1,5 +1,5 @@
-PLEASE DO NOT USE FOR PRODUCTION
-This repository is just a test purpose.
+PLEASE DO NOT USE FOR PRODUCTION  
+This repository is just for test purpose.
 
 Size for built ubuntu machine: 8.14 GB
 
