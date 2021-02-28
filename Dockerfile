@@ -11,6 +11,10 @@ RUN apt-get -y install git jq bc automake tmux rsync htop \
     libssl-dev libtinfo-dev libsystemd-dev zlib1g-dev make \
     g++ wget libncursesw5 libtool autoconf -y
 
+# Install Japanese package
+RUN apt-get install language-pack-ja -y
+RUN update-locale LANG=ja_JP.UTF-8
+
 RUN mkdir -p ${HOME}/git
 WORKDIR ${HOME}/git
 RUN git clone https://github.com/input-output-hk/libsodium
@@ -38,14 +42,16 @@ RUN make install
 
 RUN echo PATH="${HOME}/.local/bin:$PATH" >> ${HOME}/.bashrc
 RUN echo export LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH" >> ${HOME}/.bashrc
-RUN echo export NODE_HOME=$HOME/cardano-my-node >> ${HOME}/.bashrc
+RUN echo export NODE_HOME=$HOME/cardano-node >> ${HOME}/.bashrc
 RUN echo export NODE_CONFIG=mainnet>> ${HOME}/.bashrc
 RUN echo export NODE_BUILD_NUM=$(curl https://hydra.iohk.io/job/Cardano/iohk-nix/cardano-deployment/latest-finished/download/1/index.html | grep -e "build" | sed 's/.*build\/\([0-9]*\)\/download.*/\1/g') >> ${HOME}/.bashrc
+# Env for Japanese
+RUN echo 'export LANG=ja_JP.UTF-8' >> ~/.bashrc
 RUN source ${HOME}/.bashrc
 
 ENV PATH $PATH:/root/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 ENV LD_LIBRARY_PATH $LD_LIBRARY_PATH:/usr/local/lib
-ENV NODE_HOME $NODE_HOME:/root/cardano-my-node
+ENV NODE_HOME $NODE_HOME:/root/cardano-node
 
 RUN cabal update
 RUN cabal -V
